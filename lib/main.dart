@@ -1,49 +1,25 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'second_screen.dart';
+import 'package:location/location.dart';
 
 void main() {
-  runApp(StopwatchApp());
+  runApp(LocationApp());
 }
 
-class StopwatchApp extends StatefulWidget {
+class LocationApp extends StatefulWidget {
   @override
-  _StopwatchAppState createState() => _StopwatchAppState();
+  _LocationApp createState() => _LocationApp();
 }
 
-class _StopwatchAppState extends State<StopwatchApp> {
-  late Stopwatch _stopwatch;
+class _LocationApp extends State<LocationApp> {
   late Timer _timer;
+  late Location _location;
 
   @override
   void initState() {
     super.initState();
-    _stopwatch = Stopwatch();
-  }
-
-  void _startTimer() {
-    _timer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
-      if (_stopwatch.isRunning) {
-        setState(() {
-          // 毎秒UIを更新
-        });
-      }
-    });
-  }
-
-  String _formattedTime() {
-    final duration = _stopwatch.elapsed;
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    final hours = twoDigits(duration.inHours);
-    final minutes = twoDigits(duration.inMinutes.remainder(60));
-    final seconds = twoDigits(duration.inSeconds.remainder(60));
-    return "$hours:$minutes:$seconds";
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
+    _location = new Location();
   }
 
   @override
@@ -54,32 +30,14 @@ class _StopwatchAppState extends State<StopwatchApp> {
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                _formattedTime(),
-                style: TextStyle(fontSize: 48),
-              ),
+            children:[
               ElevatedButton(
                 onPressed: () {
-                  setState(() {
-                    if (_stopwatch.isRunning) {
-                      _stopwatch.stop();
-                      _timer?.cancel();
-                    } else {
-                      _stopwatch.start();
-                      _startTimer();
-                    }
+                  _location.getLocation().then((value) {
+                    print(value);
                   });
                 },
-                child: Text(_stopwatch.isRunning ? '停止' : '開始'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _stopwatch.reset();
-                  });
-                },
-                child: Text('リセット'),
+                child: Text('位置情報取得'),
               ),
             ],
           ),
