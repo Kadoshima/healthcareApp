@@ -30,7 +30,7 @@ class _LocationApp extends State<LocationApp> {
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children:[
+            children: [
               ElevatedButton(
                 onPressed: () {
                   _location.getLocation().then((value) {
